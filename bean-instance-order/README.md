@@ -12,7 +12,7 @@
 
 # 1 背景
 
-   在使用Spring时，Bean之间会有些依赖，比如一个Bean A实例化时需要用到Bean B,那么B应该在A之前实例化好。很多时候Spring智能地为我们做好了这些工作，但某些情况下可能不是，比如Springboot的@AutoConfigureAfter注解，手动的指定Bean的实例化顺序。了解Spring内Bean的解析，加载和实例化顺序机制有助于我们更好的使用Spring/Springboot，避免手动的去干预Bean的加载过程，搭建更优雅的框架。
+  在使用Spring时，Bean之间会有些依赖，比如一个Bean A实例化时需要用到Bean B,那么B应该在A之前实例化好。很多时候Spring智能地为我们做好了这些工作，但某些情况下可能不是，比如Springboot的@AutoConfigureAfter注解，手动的指定Bean的实例化顺序。了解Spring内Bean的解析，加载和实例化顺序机制有助于我们更好的使用Spring/Springboot，避免手动的去干预Bean的加载过程，搭建更优雅的框架。
 
 # 2 初始化过程
 
