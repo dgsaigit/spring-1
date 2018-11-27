@@ -58,57 +58,15 @@ Bean Class的结构图如上所示,源码参考[spring-beans-instance-order](spr
 |  1   |      首先注解@ComponentScan扫描到Test配置类，立即实例化      | Test                       |                   |
 |  2   | 解析Test,发现注解@ComponentScan、@Import、@Bean,根据优先级，先执行@ComponentScan扫描，发现B配置类，立即实例化B | Test<br>B                  |                   |
 |  3   | 解析B,发现注解@ComponentScan,执行扫描，发现D、F配置类，根据顺序立即实例化D、F | Test<br>B<br>D<br>F        |                   |
-|  4   | 根据顺序，先递归解析D,发现@Bean定义的类O,此种形式定义的Bean Class不会被递归解析,而D已经被加载实例化，所以将O加入排序 | Test<br/>BDF|O|
-|  5   | 然后再解析F,发现注解@Import、@ImportResource,@Import优先级高于@ImportResource,先解析Q,Q上没注解，将Q加入排序 | Test<br/>BDF| O<br/>Q|
-|  6   |     之后解析xml文件，里面有个类P的Bean创建，将P加入排序      | Test<br/>BDF | O<br/>QP          |
-|  7   | Test上@ComponentScan递归解析结束，开始解析@Import，引入A、C，根据顺序先解析A | Test<br/>BDF               | O<br/>QP          |
-|  8   | 递归解析A,扫描到配置类J,加载并实例化，逐步@Import E、@Import A、@Bean | Test<br/>BDJ              | O<br/>QPEAI       |
-|  9   | 递归解析C,先执行@ComponentScan扫描，扫描到配置类G,立即加载实例化，再递归解析G,逐步@Import K、@Bean L | Test<br/>BDFJG             |O<br/>QPEAIKL     |
-|  10  | 再解析C上注解@Import,在解析类N时，发现N依赖H,即@Autowired,实例化N时会触发H的提前实例化,将N、H加入排序 | Test<br/>B
-D
-F
-J
-G             | O<br/>Q
-P
-E
-A
-I
-K
-L
-N
-H   |
-|  11  | 之后解析C上的@Bean方法，因为C是被@Import引用的，C先一步M被加入加载实例序列 | Test<br/>B
-D
-F
-J
-G             | O<br/>Q
-P
-E
-A
-I
-K
-L
-N
-H
-C
-M |
-|  12  |         结束，开始加载实例化序列中ConfigurationClass         | Test<br/>B
-D
-F
-J
-G
-O
-Q
-P
-E
-A
-I
-K
-L
-N
-H
-C
-M |                   |
+|  4   | 根据顺序，先递归解析D,发现@Bean定义的类O,此种形式定义的Bean Class不会被递归解析,而D已经被加载实例化，所以将O加入排序 | Test<br/>B<br>D<br>F|O|
+|  5   | 然后再解析F,发现注解@Import、@ImportResource,@Import优先级高于@ImportResource,先解析Q,Q上没注解，将Q加入排序 | Test<br/>B<br>D<br>F| O<br/>Q|
+|  6   |     之后解析xml文件，里面有个类P的Bean创建，将P加入排序      | Test<br/>B<br>D<br>F | O<br/>Q<br>P          |
+|  7   | Test上@ComponentScan递归解析结束，开始解析@Import，引入A、C，根据顺序先解析A | Test<br/>B<br>D<br>F               | O<br/>Q<br>P          |
+|  8   | 递归解析A,扫描到配置类J,加载并实例化，逐步@Import E、@Import A、@Bean | Test<br/>B<br>D<br>J              | O<br/>Q<br>P<br>E<br>A<br>I       |
+|  9   | 递归解析C,先执行@ComponentScan扫描，扫描到配置类G,立即加载实例化，再递归解析G,逐步@Import K、@Bean L | Test<br/>B<br>D<br>F<br>J<br>G             |O<br/>Q<br>P<br>E<br>A<br>I<br>K<br>L     |
+|  10  | 再解析C上注解@Import,在解析类N时，发现N依赖H,即@Autowired,实例化N时会触发H的提前实例化,将N、H加入排序 |Test<br/>B<br>D<br>F<br>J<br>G  | O<br/>Q<br>P<br>E<br>A<br>I<br>K<br>L<br>N<br>H   |
+|  11  | 之后解析C上的@Bean方法，因为C是被@Import引用的，C先一步M被加入加载实例序列 | Test<br/>B<br>D<br>F<br>J<br>G             | O<br/>Q<br>P<br>E<br>A<br>I<br>K<br>L<br>N<br>H<br>C<br>M |
+|  12  |         结束，开始加载实例化序列中ConfigurationClass         | Test<br/>B<br>D<br>F<br>J<br>G<br>O<br/>Q<br>P<br>E<br>A<br>I<br>K<br>L<br>N<br>H<br>C<br>M |                   |
 ## 4.2 实例二
 
 如果将上面实例为基础，配置类Test是通过@Import形式引入的话，Test不会立即加载实例化，要等递归结束，但N依赖H,H又是在Test下@Bean方法得到的，Test排在H前面，排在N后面，顺序又变成
