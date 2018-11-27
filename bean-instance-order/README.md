@@ -60,33 +60,10 @@ Bean Class的结构图如上所示,源码参考[spring-beans-instance-order](spr
 |  3   | 解析B,发现注解@ComponentScan,执行扫描，发现D、F配置类，根据顺序立即实例化D、F | Test<br>B<br>D<br>F        |                   |
 |  4   | 根据顺序，先递归解析D,发现@Bean定义的类O,此种形式定义的Bean Class不会被递归解析,而D已经被加载实例化，所以将O加入排序 | Test<br/>BDF|O|
 |  5   | 然后再解析F,发现注解@Import、@ImportResource,@Import优先级高于@ImportResource,先解析Q,Q上没注解，将Q加入排序 | Test<br/>BDF| O<br/>Q|
-|  6   |     之后解析xml文件，里面有个类P的Bean创建，将P加入排序      | Test<br/>B
-D
-F               | O<br/>Q
-P          |
-|  7   | Test上@ComponentScan递归解析结束，开始解析@Import，引入A、C，根据顺序先解析A | Test<br/>B
-D
-F               | O<br/>Q
-P          |
-|  8   | 递归解析A,扫描到配置类J,加载并实例化，逐步@Import E、@Import A、@Bean | Test<br/>B
-D
-F
-J              | O<br/>Q
-P
-E
-A
-I       |
-|  9   | 递归解析C,先执行@ComponentScan扫描，扫描到配置类G,立即加载实例化，再递归解析G,逐步@Import K、@Bean L | Test<br/>B
-D
-F
-J
-G             | O<br/>Q
-P
-E
-A
-I
-K
-L     |
+|  6   |     之后解析xml文件，里面有个类P的Bean创建，将P加入排序      | Test<br/>BDF | O<br/>QP          |
+|  7   | Test上@ComponentScan递归解析结束，开始解析@Import，引入A、C，根据顺序先解析A | Test<br/>BDF               | O<br/>QP          |
+|  8   | 递归解析A,扫描到配置类J,加载并实例化，逐步@Import E、@Import A、@Bean | Test<br/>BDJ              | O<br/>QPEAI       |
+|  9   | 递归解析C,先执行@ComponentScan扫描，扫描到配置类G,立即加载实例化，再递归解析G,逐步@Import K、@Bean L | Test<br/>BDFJG             |O<br/>QPEAIKL     |
 |  10  | 再解析C上注解@Import,在解析类N时，发现N依赖H,即@Autowired,实例化N时会触发H的提前实例化,将N、H加入排序 | Test<br/>B
 D
 F
