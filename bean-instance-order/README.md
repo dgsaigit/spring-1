@@ -44,7 +44,7 @@
 
 ## 4.1 实例一
 
-### 4.1.1 序列图
+### 4.1.1 流程图
 ![](流程图.PNG)
 
 Bean Class的结构图如上所示,源码参考[spring-beans-instance-order](spring-beans-instance-order),JUnit Test运行XmlTest,得出实例化顺序是：Test->B->D->F->J->G->O->Q->P->E->A->I->K->L->N->H->C->M
