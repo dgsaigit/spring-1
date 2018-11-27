@@ -45,30 +45,7 @@
 ## 4.1 实例一
 
 ### 4.1.1 序列图
-
-```mermaid
-graph LR
-S[开始] -. "@"ComponentScan .->A1[Test]
-A1 -. "@"Import .->A[A]
-A1 -. "@"ComponentScan .->B[B]
-A1 -. "@"Import .->C[C]
-A1 -. "@"Bean .->H[H]
-A -. "@"Import .->E[E]
-E -. "@"ComponentScan .->J[J]
-A -. "@"Bean .->I[I]
-B -. "@"ComponentScan .->D[D]
-B -. "@"ComponentScan .->F[F]
-C -. "@"ComponentScan .->G[G]
-C -. "@"Bean .->M[M]
-C -. "@"Import .->N[N]
-G -. "@"Import .->K[K]
-G -. "@"Bean .->L[L]
-N -. "@"Autowired .->H
-D -. "@"Bean .->O[O]
-F -. "@"Import .->Q[Q]
-F -. "@"ImportResource .->xml[import-resource.xml]
-xml -. bean .-> P[P]
-```
+![](流程图.PNG)
 
 Bean Class的结构图如上所示,源码参考[spring-beans-instance-order](spring-beans-instance-order),JUnit Test运行XmlTest,得出实例化顺序是：Test->B->D->F->J->G->O->Q->P->E->A->I->K->L->N->H->C->M
 
