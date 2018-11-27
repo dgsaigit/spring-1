@@ -58,12 +58,8 @@ Bean Class的结构图如上所示,源码参考[spring-beans-instance-order](spr
 |  1   |      首先注解@ComponentScan扫描到Test配置类，立即实例化      | Test                       |                   |
 |  2   | 解析Test,发现注解@ComponentScan、@Import、@Bean,根据优先级，先执行@ComponentScan扫描，发现B配置类，立即实例化B | Test<br>B                  |                   |
 |  3   | 解析B,发现注解@ComponentScan,执行扫描，发现D、F配置类，根据顺序立即实例化D、F | Test<br>B<br>D<br>F        |                   |
-|  4   | 根据顺序，先递归解析D,发现@Bean定义的类O,此种形式定义的Bean Class不会被递归解析,而D已经被加载实例化，所以将O加入排序 | Test<br/>B
-D
-F               | O                 |
-|  5   | 然后再解析F,发现注解@Import、@ImportResource,@Import优先级高于@ImportResource,先解析Q,Q上没注解，将Q加入排序 | Test<br/>B
-D
-F               | O<br/>Q           |
+|  4   | 根据顺序，先递归解析D,发现@Bean定义的类O,此种形式定义的Bean Class不会被递归解析,而D已经被加载实例化，所以将O加入排序 | Test<br/>BDF|O|
+|  5   | 然后再解析F,发现注解@Import、@ImportResource,@Import优先级高于@ImportResource,先解析Q,Q上没注解，将Q加入排序 | Test<br/>BDF| O<br/>Q|
 |  6   |     之后解析xml文件，里面有个类P的Bean创建，将P加入排序      | Test<br/>B
 D
 F               | O<br/>Q
