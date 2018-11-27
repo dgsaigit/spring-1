@@ -26,7 +26,7 @@
 
 **总结**
 
-* 通过**@ComponentScan**扫描直接得到的Bean Class会被**立即加载，实例化**。
+* 通过**"@"ComponentScan**扫描直接得到的Bean Class会被**立即加载，实例化**。
 
 * **通过@Bean和@Import形式定义的Bean Class不会立即加载，他们会被放入一个ConfigurationClass类中，然后按照解析的顺序有序排列**。一个ConfigurationClass代表一个配置类，这个类可能是被@ComponentScan扫描到的，则此类已经被加载过了；也可能是被@Import引入的，则此类还未被加载；此类中可能含有@Bean标识的方法。
 
